@@ -6,7 +6,7 @@ plugins and themes.
 - **[PLUGINS.md](PLUGINS.md)** - plugins registry
 - **[THEMES.md](THEMES.md)** - themes registry
 
-## Before you run one
+## Before you install a plugin or a theme
 
 Listing here is not code review. Assume nothing has been verified, 
 so read the source, then build it yourself from the source you read. This
@@ -17,7 +17,7 @@ tracker takes contract issues only.
 
 ## Installing
 
-- **app**: drop the plugin folder (one carrying a `plugin.toml`) in
+- **plugin**: drop the plugin folder (one carrying a `plugin.toml`) in
   `<configdir>/plugins/` and start it from its row in Settings > Plugins,
   or run it yourself on your LAN pointed at monbooru. Either way, approve the pairing card in Settings > Plugins.  A dropped
   folder brings whatever it needs to run with it (monbooru installs
