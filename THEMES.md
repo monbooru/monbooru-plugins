@@ -9,6 +9,7 @@ in `<configdir>/themes/` and picked in Settings > Plugins.
 |---------|-------------------------------------------------------|------|------------|----------------------------------|----------|
 | light   | a simple light theme | yes   | leqwin     | [themes/light](themes/light)     | v1.17.1  |
 | dark | the default shipped dark theme, every variable commented     | no   | leqwin     | [themes/dark](themes/dark) | v1.17.1  |
+| lainbooru | serial experiments lain theme, indigo grounds with magenta accent | yes  | gary-host-laptop | [lainbooru-theme](https://github.com/gary-host-laptop/lainbooru-theme) | v1.17.1  |
 
 `logo` says whether picking the theme also changes the topbar logo.  
 `monbooru` is the last version the maintainer tested against.
