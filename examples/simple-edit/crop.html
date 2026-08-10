@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>crop image {{.ID}}</title>
+
+<!-- monbooru serves this page one path deep, under /plugins/simple-edit/, so
+     every link on it is relative. Its stylesheet is not part of the contract
+     either, so the handful of colours the page needs are carried here. -->
+<style>
+ :root { --bg: #0e0e0e; --surface: #1a1818; --border: #2a2828; --fg: #e8e4e2; --dim: #a09898; --accent: #aa66cc; }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body { background: var(--bg); color: var(--fg); font: 14px "JetBrains Mono", "Fira Mono", monospace; padding: 10px; }
+ h1 { font-size: 14px; }
+ p { color: var(--dim); font-size: 12px; margin-bottom: 8px; }
+ #frame { position: relative; display: inline-block; line-height: 0; background: #000; }
+ #frame img { display: block; max-width: 100%; max-height: calc(100vh - 120px); user-select: none; }
+ #box { position: absolute; display: none; border: 1px solid var(--accent); background: rgba(170, 102, 204, .2); }
+ form { display: flex; gap: 8px; margin-top: 8px; }
+ button, a { font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--border); padding: 4px 8px; cursor: pointer; text-decoration: none; }
+ button[value=replace] { color: var(--accent); border-color: var(--accent); }
+</style>
+
+<h1>crop image {{.ID}}</h1>
+<p>Drag a box over the image, then keep the result.</p>
+<div id="frame"><img id="pic" src="crop/preview?image={{.ID}}" alt=""><div id="box"></div></div>
+<form method="post" action="crop">
+  <input type="hidden" name="image" value="{{.ID}}">
+  <input type="hidden" name="back" value="{{.Back}}">
+  <input type="hidden" name="x" id="x"><input type="hidden" name="y" id="y">
+  <input type="hidden" name="w" id="w"><input type="hidden" name="h" id="h">
+  <button name="mode" value="replace" disabled>Save in place</button>
+  <button name="mode" value="version" disabled>Save as new version</button>
+  <a href="{{.Back}}">Cancel</a>
+</form>
+
+<script>
+const pic = document.getElementById('pic'), box = document.getElementById('box');
+const saves = document.querySelectorAll('form button');
+let start = null;
+
+pic.addEventListener('mousedown', e => {
+  e.preventDefault(); 
+  const r = pic.getBoundingClientRect();
+  start = {x: e.clientX - r.left, y: e.clientY - r.top};
+});
+
+addEventListener('mousemove', e => {
+  if (!start) return;
+  const r = pic.getBoundingClientRect();
+  if (!r.width) return;
+  const cur = {x: e.clientX - r.left, y: e.clientY - r.top};
+  const x = Math.min(start.x, cur.x), y = Math.min(start.y, cur.y);
+  const w = Math.abs(cur.x - start.x), h = Math.abs(cur.y - start.y);
+  Object.assign(box.style, {
+    left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px',
+    display: w && h ? 'block' : 'none',
+  });
+  const scale = pic.naturalWidth / r.width;
+  for (const [id, value] of [['x', x], ['y', y], ['w', w], ['h', h]]) {
+    document.getElementById(id).value = Math.round(value * scale);
+  }
+  for (const b of saves) b.disabled = !(w && h);
+});
+
+addEventListener('mouseup', () => { start = null; });
+</script>

@@ -1,0 +1,4 @@
+command = "./simple-edit"
+args = []
+command_windows = "./simple-edit.exe"
+args_windows = []

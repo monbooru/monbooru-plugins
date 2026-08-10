@@ -1,0 +1,71 @@
+/* monbooru theme starter.
+   Copy this folder, rename it, drop it in <configdir>/themes/, and select it
+   in Settings > Plugins. A logo.png beside this file swaps the topbar
+   logo while the theme is active.
+
+   The variable names are the stable theming surface; rule-level
+   selectors are not. A theme that overrides more than these may break
+  across releases. */
+
+:root {
+  /* grounds */
+  --bg:         #0e0e0e;  /* page background */
+  --bg-surface: #1a1818;  /* cards, bars, panels */
+  --bg-input:   #080808;  /* text inputs, search bar */
+  --border:     #2a2828;  /* the 1px line around everything */
+
+  /* text */
+  --fg:         #e8e4e2;  /* primary text */
+  --fg-dim:     #a09898;  /* secondary text, labels, counts */
+
+  /* the app's own colors */
+  --accent:     #9d2235;  /* focus rings, active states, danger surfaces */
+  --link:       #ef8f99;  /* links and linklike buttons */
+
+  /* semantic */
+  --success:    #7fc99a;  /* ok flashes, confirm buttons */
+  --warning:    #e8c06a;  /* warnings, pending states */
+  --error:      #ef8f99;  /* error flashes, danger text */
+
+  /* provenance - who did this */
+  --monloader:  #88b0d8;  /* monloader surfaces */
+  --tagger:     #7cc4b8;  /* auto-tagger surfaces and auto tags */
+  --plugin:     #aa66cc;  /* plugin buttons and blocks */
+
+  /* marks */
+  --fav:        #e0524d;  /* favorites */
+  --remove:     #b5666f;  /* removal affordances */
+  --alternate:  #9b93e0;  /* alternate-relation surfaces */
+
+  /* overlays and media */
+  --scrim:      #000;     /* dialog backdrops, thumbnail chip scrims -
+                             each site applies its own alpha over this */
+  --media-bg:   #000;     /* the well behind images and the reader */
+
+  /* type */
+  --font-mono:  "JetBrains Mono", "Fira Mono", "Courier New", monospace;
+
+  /* header menu (optional), one hue per entry.
+  Leave unset for a monochrome menu.
+  --nav-images:      #...;
+  --nav-inbox:       #...;
+  --nav-categories:  #...;
+  --nav-tags:        #...;
+  --nav-collections: #...;
+  --nav-relations:   #...;
+  --nav-settings:    #...;
+  */
+
+  /* tag categories (optional). Colours the user has manually defined are not changed.
+  --cat-3d90e3: #...;   general
+  --cat-00aa00: #...;   character
+  --cat-cc0000: #...;   artist
+  --cat-aa00aa: #...;   copyright
+  --cat-ffaa00: #...;   meta
+  --cat-996666: #...;   rating
+  --cat-7d4fbf: #...;   medium
+  --cat-b85c9e: #...;   person
+  --cat-4a8fa8: #...;   year
+  --cat-ed5d1f: #...;   species
+  */
+}
