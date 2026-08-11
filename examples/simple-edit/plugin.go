@@ -238,7 +238,7 @@ func unpair(w http.ResponseWriter, _ *http.Request) {
 	log.Print("the pairing was removed in monbooru; offering again")
 	sendJSON(w, http.StatusOK, map[string]string{"status": "removed"})
 	go func() {
-		if err := pair(); err != nil {0
+		if err := pair(); err != nil {
 			log.Printf("offering again after the teardown: %v", err)
 		}
 	}()
