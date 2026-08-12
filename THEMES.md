@@ -7,9 +7,10 @@ in `<configdir>/themes/` and picked in Settings > Plugins.
 
 | name    | the look                                              | logo | maintainer | source                           | monbooru |
 |---------|-------------------------------------------------------|------|------------|----------------------------------|----------|
-| light   | a simple light theme | yes   | leqwin     | [themes/light](themes/light)     | v1.17.1  |
-| dark | the default shipped dark theme, every variable commented     | no   | leqwin     | [themes/dark](themes/dark) | v1.17.1  |
-| lainbooru | serial experiments lain theme, indigo grounds with magenta accent | yes  | gary-host-laptop | [lainbooru-theme](https://github.com/gary-host-laptop/lainbooru-theme) | v1.17.1  |
+| light   | a simple light theme | yes   | leqwin     | [themes/light](themes/light)     | v1.18.0  |
+| dark | the default shipped dark theme, every variable commented     | no   | leqwin     | [themes/dark](themes/dark) | v1.18.0  |
+| lainbooru | serial experiments lain theme, indigo grounds with magenta accent | yes  | gary-host-laptop | [lainbooru-theme](https://github.com/gary-host-laptop/ghost-themes/tree/main/lainbooru) | v1.18.0  |
+| old_steam | olive palette inspired by the old steam client | yes  | gary-host-laptop | [old_steam](https://github.com/gary-host-laptop/ghost-themes/tree/main/old_steam) | v1.18.0  |
 
 `logo` says whether picking the theme also changes the topbar logo.  
 `monbooru` is the last version the maintainer tested against.
