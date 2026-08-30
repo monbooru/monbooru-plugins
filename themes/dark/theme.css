@@ -8,6 +8,8 @@
   across releases. */
 
 :root {
+  color-scheme: dark;
+
   /* grounds */
   --bg:         #0e0e0e;  /* page background */
   --bg-surface: #1a1818;  /* cards, bars, panels */

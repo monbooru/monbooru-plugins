@@ -8,19 +8,28 @@
 <style>
  :root { --bg: #0e0e0e; --surface: #1a1818; --border: #2a2828; --fg: #e8e4e2; --dim: #a09898; --accent: #aa66cc; }
  * { box-sizing: border-box; margin: 0; padding: 0; }
- body { background: var(--bg); color: var(--fg); font: 14px "JetBrains Mono", "Fira Mono", monospace; padding: 10px; }
+ body { background: var(--bg); color: var(--fg); font: 14px "JetBrains Mono", "Fira Mono", monospace; padding: 10px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
  h1 { font-size: 14px; }
  p { color: var(--dim); font-size: 12px; margin-bottom: 8px; }
  #frame { position: relative; display: inline-block; line-height: 0; background: #000; }
  #frame img { display: block; max-width: 100%; max-height: calc(100vh - 120px); user-select: none; }
- #box { position: absolute; display: none; border: 1px solid var(--accent); background: rgba(170, 102, 204, .2); }
+ #box { position: absolute; display: none; border: 1px solid var(--accent); background: rgba(170, 102, 204, .2); cursor: move; }
+ #box i { position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; margin: -5px 0 0 -5px; background: var(--accent); }
+ #box [data-grab*=t] { top: 0 }
+ #box [data-grab*=b] { top: 100% }
+ #box [data-grab*=l] { left: 0 }
+ #box [data-grab*=r] { left: 100% }
+ #box [data-grab=lt], #box [data-grab=rb] { cursor: nwse-resize }
+ #box [data-grab=rt], #box [data-grab=lb] { cursor: nesw-resize }
+ #box [data-grab=t], #box [data-grab=b] { cursor: ns-resize }
+ #box [data-grab=l], #box [data-grab=r] { cursor: ew-resize }
  form { display: flex; gap: 8px; margin-top: 8px; }
  button, a { font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--border); padding: 4px 8px; cursor: pointer; text-decoration: none; }
  button[value=replace] { color: var(--accent); border-color: var(--accent); }
 </style>
 
 <h1>crop image {{.ID}}</h1>
-<p>Drag a box over the image, then keep the result.</p>
+<p>Drag a box over the image, adjust it by its handles, then keep the result.</p>
 <div id="frame"><img id="pic" src="crop/preview?image={{.ID}}" alt=""><div id="box"></div></div>
 <form method="post" action="crop">
   <input type="hidden" name="image" value="{{.ID}}">
@@ -35,31 +44,75 @@
 <script>
 const pic = document.getElementById('pic'), box = document.getElementById('box');
 const saves = document.querySelectorAll('form button');
-let start = null;
 
-pic.addEventListener('mousedown', e => {
-  e.preventDefault(); 
-  const r = pic.getBoundingClientRect();
-  start = {x: e.clientX - r.left, y: e.clientY - r.top};
+// One handle per corner and edge; the name lists the edges it drags.
+box.innerHTML = ['lt', 't', 'rt', 'r', 'rb', 'b', 'lb', 'l'].map(n => `<i data-grab=${n}></i>`).join('');
+
+// The box is held in displayed pixels; the form carries it in the image's own.
+let sel = null, grab = null, from = null;
+
+const rect = () => pic.getBoundingClientRect();
+
+// Clamped to the image, so no drag can push the box over the buttons.
+const at = (e, r) => ({
+  x: Math.min(Math.max(e.clientX - r.left, 0), r.width),
+  y: Math.min(Math.max(e.clientY - r.top, 0), r.height),
 });
 
-addEventListener('mousemove', e => {
-  if (!start) return;
-  const r = pic.getBoundingClientRect();
-  if (!r.width) return;
-  const cur = {x: e.clientX - r.left, y: e.clientY - r.top};
-  const x = Math.min(start.x, cur.x), y = Math.min(start.y, cur.y);
-  const w = Math.abs(cur.x - start.x), h = Math.abs(cur.y - start.y);
+function draw() {
+  const r = rect();
+  const l = Math.min(sel.l, sel.r), t = Math.min(sel.t, sel.b);
+  const w = Math.abs(sel.r - sel.l), h = Math.abs(sel.b - sel.t);
   Object.assign(box.style, {
-    left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px',
+    left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px',
     display: w && h ? 'block' : 'none',
   });
   const scale = pic.naturalWidth / r.width;
-  for (const [id, value] of [['x', x], ['y', y], ['w', w], ['h', h]]) {
+  for (const [id, value] of [['x', l], ['y', t], ['w', w], ['h', h]]) {
     document.getElementById(id).value = Math.round(value * scale);
   }
   for (const b of saves) b.disabled = !(w && h);
+}
+
+pic.addEventListener('mousedown', e => {
+  e.preventDefault();
+  const p = at(e, rect());
+  sel = {l: p.x, t: p.y, r: p.x, b: p.y};
+  grab = 'rb'; // a fresh drag carries the corner away from where it started
+  draw();
 });
 
-addEventListener('mouseup', () => { start = null; });
+box.addEventListener('mousedown', e => {
+  e.preventDefault();
+  grab = e.target.dataset.grab || 'move';
+  from = {x: e.clientX, y: e.clientY, l: sel.l, t: sel.t};
+});
+
+addEventListener('mousemove', e => {
+  if (!grab) return;
+  const r = rect();
+  if (!r.width) return;
+  if (grab === 'move') {
+    const w = sel.r - sel.l, h = sel.b - sel.t;
+    sel.l = Math.min(Math.max(from.l + e.clientX - from.x, 0), r.width - w);
+    sel.t = Math.min(Math.max(from.t + e.clientY - from.y, 0), r.height - h);
+    sel.r = sel.l + w;
+    sel.b = sel.t + h;
+  } else {
+    const p = at(e, r);
+    for (const edge of grab) sel[edge] = edge === 'l' || edge === 'r' ? p.x : p.y;
+  }
+  draw();
+});
+
+
+addEventListener('mouseup', () => {
+  if (sel) {
+    sel = {
+      l: Math.min(sel.l, sel.r), t: Math.min(sel.t, sel.b),
+      r: Math.max(sel.l, sel.r), b: Math.max(sel.t, sel.b),
+    };
+  }
+  grab = null;
+});
 </script>

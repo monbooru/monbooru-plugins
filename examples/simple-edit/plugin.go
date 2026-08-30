@@ -59,7 +59,7 @@ func creds() credentials {
 // run serves mux, offers to pair, and returns when monbooru stops the plugin.
 func run(mux *http.ServeMux) {
 	addr := flag.String("addr", "127.0.0.1:7301", "address to serve on")
-	monbooru := flag.String("monbooru", cmp.Or(os.Getenv("MONBOORU_URL"), "http://127.0.0.1:8080"), "monbooru base url")
+	monbooru := flag.String("monbooru", cmp.Or(os.Getenv("MONBOORU_URL"), "http://127.0.0.1:8455"), "monbooru base url")
 	advertised := flag.String("url", "", "address monbooru should call us at (default http://<addr>)")
 	state := flag.String("state", ".", "directory holding the pairing credentials")
 	flag.Parse()

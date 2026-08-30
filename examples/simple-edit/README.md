@@ -49,7 +49,7 @@ the pairing request that follows.
 You can also run it by hand, without putting it in `plugins/`:
 
 ```
-./simple-edit -monbooru http://127.0.0.1:8080 -addr 127.0.0.1:7301
+./simple-edit -monbooru http://127.0.0.1:8455 -addr 127.0.0.1:7301
 ```
 
 ## Changing the buttons

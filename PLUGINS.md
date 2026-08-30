@@ -8,9 +8,9 @@ see [CONTRIBUTING](CONTRIBUTING.md).
 
 | name        | what it does                               | maintainer | source                                       | monbooru |
 |-------------|--------------------------------------------|------------|----------------------------------------------|----------|
-| simple-edit | rotate and crop images (Go, single binary) | leqwin     | [examples/simple-edit](examples/simple-edit) | v1.17.1  |
+| simple-edit | rotate and crop images (Go, single binary) | leqwin     | [examples/simple-edit](examples/simple-edit) | v1.20.1  |
 
-`source` is a public repo. `monbooru` is the last monbooru version the maintainer tested against (for information only, non blocking).
+`source` is a public repo. `monbooru` is the last monbooru version the maintainer tested against (for information only, non blocking). Plugins use a contract version instead of a monbooru version so a row older than the running monbooru is not by itself a warning.
 
 ## Row rules
 
