@@ -2,12 +2,22 @@ name: Release simple-edit
 
 on:
   push:
-    tags:
-      - 'simple-edit-v*'
+    branches:
+      - main
+    paths:
+      - 'examples/simple-edit/**'
+      - '.github/workflows/release-simple-edit.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-simple-edit
+  cancel-in-progress: true
+
+env:
+  TAG: simple-edit
 
 jobs:
   release:
@@ -23,11 +33,10 @@ jobs:
 
       - name: Build the archives
         working-directory: examples/simple-edit
-        env:
-          TAG: ${{ github.ref_name }}
         run: |
           mkdir -p dist
-          for target in linux/amd64 linux/arm64 windows/amd64 darwin/amd64 darwin/arm64; do
+          # linux and windows, on amd64 and arm64.
+          for target in linux/amd64 linux/arm64 windows/amd64 windows/arm64; do
             os=${target%/*}
             arch=${target#*/}
             bin=simple-edit
@@ -40,20 +49,34 @@ jobs:
               go build -trimpath -ldflags '-s -w' -o "pkg/simple-edit/$bin" .
             cp plugin.toml README.md pkg/simple-edit/
             if [ "$os" = windows ]; then
-              (cd pkg && zip -qr "../dist/${TAG}_${os}_${arch}.zip" simple-edit)
+              (cd pkg && zip -qr "../dist/simple-edit_${os}_${arch}.zip" simple-edit)
             else
-              tar -czf "dist/${TAG}_${os}_${arch}.tar.gz" -C pkg simple-edit
+              tar -czf "dist/simple-edit_${os}_${arch}.tar.gz" -C pkg simple-edit
             fi
           done
           ls -l dist
 
-      - name: Attach them to the release
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
-          body: |
-            Unpack the archive for your machine and drop the `simple-edit`
-            folder in `<configdir>/plugins/`, next to `monbooru.toml`. Start it
-            from its row under Settings > Plugins and approve the pairing card.
-          files: examples/simple-edit/dist/*
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f "$TAG"
+          git push -f origin "refs/tags/$TAG"
+
+          notes="$(cat <<'EOF'
+          Latest build of the simple-edit example, rebuilt from `main` whenever it
+          changes.
+
+          Unpack the archive for your machine and drop the `simple-edit` folder in
+          `<configdir>/plugins/`, next to `monbooru.toml`. Start it from its row
+          under Settings > Plugins and approve the pairing card.
+          EOF
+          )"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title simple-edit --notes "$notes"
+          else
+            gh release create "$TAG" --title simple-edit --notes "$notes"
+          fi
+
+          gh release upload "$TAG" examples/simple-edit/dist/* --clobber
