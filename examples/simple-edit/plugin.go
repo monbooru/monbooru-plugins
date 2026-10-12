@@ -1,6 +1,6 @@
 // Common mechanisms you can copy for any monbooru plugin: pairing, the
 // credentials a pairing leaves behind, calling the REST API, and checking that
-// an inbound request really is monbooru. 
+// an inbound request really is monbooru.
 
 package main
 
@@ -70,7 +70,7 @@ func run(mux *http.ServeMux) {
 	stateDir = *state
 
 	// monbooru probes this before the user can approve, and every 30 s
-	// after to decide whether to render our buttons. 
+	// after to decide whether to render our buttons.
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) {
 		sendJSON(w, http.StatusOK, map[string]string{"version": version})
 	})
@@ -130,7 +130,7 @@ func pair() error {
 			return nil
 		}
 		// The pairing went while we were not running: removed by hand in
-		// monbooru.toml, or a monbooru that was reinstalled. 
+		// monbooru.toml, or a monbooru that was reinstalled.
 		log.Print("monbooru no longer accepts the stored credentials; offering again")
 		forgetCredentials()
 	}
@@ -198,7 +198,7 @@ func offer(peer string) (string, error) {
 	}
 }
 
-// tokenAccepted asks monbooru whether the token we hold is still one of its own. 
+// tokenAccepted asks monbooru whether the token we hold is still one of its own.
 func tokenAccepted() bool {
 	_, code, _ := call("GET", api("/galleries"), "", nil)
 	return code != http.StatusUnauthorized && code != http.StatusServiceUnavailable
@@ -232,7 +232,7 @@ func forgetCredentials() {
 
 // unpair answers monbooru's teardown. The user removed the pairing there,
 // which revoked the token we hold, so the copy on our disk authenticates to
-// nothing and the only thing left to do is stop keeping it. 
+// nothing and the only thing left to do is stop keeping it.
 func unpair(w http.ResponseWriter, _ *http.Request) {
 	forgetCredentials()
 	log.Print("the pairing was removed in monbooru; offering again")

@@ -1,7 +1,7 @@
 // simple-edit is a reference monbooru plugin: it rotates images through a
 // relay button and crops them on a page of its own behind an open-mode one.
 // Every change goes through monbooru's REST API with the token it was issued
-// at pairing. 
+// at pairing.
 //
 
 package main
@@ -11,6 +11,7 @@ import (
 	"cmp"
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"image"
@@ -29,7 +30,7 @@ import (
 
 const (
 	appName = "simple-edit"
-	version = "0.1.0"
+	version = "0.2.0"
 )
 
 // media = "image" keeps these off videos, animations and comic archives, which
@@ -195,7 +196,7 @@ func cropSave(w http.ResponseWriter, r *http.Request) {
 }
 
 // backURL is where the page goes when it is done: what monbooru substituted
-// for {back_url}, kept only when it points back at the host the browser reached monbooru at. 
+// for {back_url}, kept only when it points back at the host the browser reached monbooru at.
 func backURL(r *http.Request, raw string) string {
 	host := r.Header.Get("X-Forwarded-Host")
 	if u, err := url.Parse(raw); err == nil && u.Host == host {
@@ -207,7 +208,7 @@ func backURL(r *http.Request, raw string) string {
 // ---- what the edits do to the library ----------------------------------
 
 func imageBytes(imageID int) ([]byte, error) {
-	raw, _, err := call("GET", api("/images/%d/file", imageID), "", nil)
+	raw, _, err := call("GET", api("/images/%d/still", imageID), "", nil)
 	return raw, err
 }
 
@@ -218,7 +219,11 @@ func fetchImage(imageID int) (image.Image, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
-	return image.Decode(bytes.NewReader(raw))
+	img, format, err := image.Decode(bytes.NewReader(raw))
+	if errors.Is(err, image.ErrFormat) {
+		return nil, "", errors.New("only jpeg, png, webp, avif and jpeg xl images can be edited")
+	}
+	return img, format, err
 }
 
 // encode writes an edited image back out: JPEG stays JPEG, anything else goes

@@ -16,6 +16,9 @@ You can copy the directory to start your own.
 
 All three declare `media = "image"`, so monbooru keeps them off videos, comic
 archives and animations rather than offering an edit that could only fail.
+It reads every image through `/api/v1/images/{id}/still`, which hands AVIF
+and JPEG XL files over as WebP, since Go decodes neither. An edited JPEG
+stays JPEG and anything else is saved back as PNG.
 
 Every change it makes goes through monbooru's REST API. It never touches the
 database or the files on disk directly.
@@ -29,7 +32,8 @@ database or the files on disk directly.
 | `crop.html` | the crop page, compiled in with `go:embed` |
 
 Standard library apart from `golang.org/x/image/webp`, because monbooru takes
-webp files and the standard library cannot read one.
+webp files, hands AVIF and JPEG XL over as webp, and the standard library
+cannot read one.
 
 ## Building it
 

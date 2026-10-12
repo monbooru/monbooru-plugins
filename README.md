@@ -25,8 +25,7 @@ tracker takes contract issues only.
   self-contained binary says in its README what needs to be on the machine
   first.
 - **theme**: drop the theme folder in `<configdir>/themes/` (a bare
-  `.css` works for CSS-only themes) and pick it in Settings > Plugins. 
-  Your own `custom_css` and `server.logo` still win over any theme.
+  `.css` works for CSS-only themes) and pick it in Settings > Plugins.
 
 ## In this repo
 
