@@ -168,6 +168,7 @@ func offer(peer string) (string, error) {
 		"peer_token":       peer,
 		"version":          version,
 		"buttons":          buttons,
+		"contract":         contract,
 	}, &offered); err != nil {
 		return "", err
 	}

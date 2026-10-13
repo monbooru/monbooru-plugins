@@ -31,6 +31,9 @@ import (
 const (
 	appName = "simple-edit"
 	version = "0.2.0"
+	// The monbooru plugin contract this was built against; a monbooru
+	// that speaks an older one refuses the pairing rather than misread it.
+	contract = 1
 )
 
 // media = "image" keeps these off videos, animations and comic archives, which

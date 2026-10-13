@@ -1,10 +1,11 @@
 # monbooru-plugins
 
 Registry for [monbooru](https://github.com/monbooru/monbooru)
-plugins and themes.
+plugins, themes and auto-tagger models.
 
 - **[PLUGINS.md](PLUGINS.md)** - plugins registry
 - **[THEMES.md](THEMES.md)** - themes registry
+- **[TAGGERS.md](TAGGERS.md)** - auto-tagger models registry
 
 ## Before you install a plugin or a theme
 
@@ -26,15 +27,20 @@ tracker takes contract issues only.
   first.
 - **theme**: drop the theme folder in `<configdir>/themes/` (a bare
   `.css` works for CSS-only themes) and pick it in Settings > Plugins.
+- **tagger**: copy the model's folder from [`taggers/`](taggers) into
+  monbooru's models folder, then press Install on its row in
+  Settings > Auto-Tagger to fetch the weights.
 
 ## In this repo
 
 - [`themes/dark`](themes/dark) - starter dark theme with every variable and comments; copy the folder and start recoloring.
 - [`themes/light`](themes/light) - a light theme example.
+- [`taggers/`](taggers) - the auto-tagger models.
 - [`examples/simple-edit`](examples/simple-edit) - an example plugin in go:
   rotate as a relay button with batch action support, crop as an open-mode page.
 
 ## Getting listed
 
-PR one row to [PLUGINS.md](PLUGINS.md) or [THEMES.md](THEMES.md).  
+PR one row to [PLUGINS.md](PLUGINS.md), [THEMES.md](THEMES.md) or
+[TAGGERS.md](TAGGERS.md) (with its folder).  
 See [CONTRIBUTING](CONTRIBUTING.md).

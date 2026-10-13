@@ -6,11 +6,11 @@ see [CONTRIBUTING](CONTRIBUTING.md).
 > Read the source and build it yourself before you run it:
 
 
-| name        | what it does                               | maintainer | source                                       | monbooru |
-|-------------|--------------------------------------------|------------|----------------------------------------------|----------|
-| simple-edit | rotate and crop images (Go, single binary) | leqwin     | [examples/simple-edit](examples/simple-edit) | v1.22.1  |
+| name        | what it does                               | maintainer | source                                       | contract | monbooru |
+|-------------|--------------------------------------------|------------|----------------------------------------------|----------|----------|
+| simple-edit | rotate and crop images (Go, single binary) | leqwin     | [examples/simple-edit](examples/simple-edit) | 1        | v1.22.1  |
 
-`source` is a public repo. `monbooru` is the last monbooru version the maintainer tested against (for information only, non blocking). Plugins use a contract version instead of a monbooru version so a row older than the running monbooru is not by itself a warning.
+`source` is a public repo. `contract` is the monbooru plugin contract version the plugin sends in its pairing request; a monbooru that uses an older one refuses it, so a row older than the running monbooru is not by itself a warning. `monbooru` is the last monbooru version the maintainer tested against (for information only).
 
 ## Row rules
 
