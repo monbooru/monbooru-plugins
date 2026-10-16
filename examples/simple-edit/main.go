@@ -30,7 +30,7 @@ import (
 
 const (
 	appName = "simple-edit"
-	version = "0.2.0"
+	version = "0.3.0"
 	// The monbooru plugin contract this was built against; a monbooru
 	// that speaks an older one refuses the pairing rather than misread it.
 	contract = 1
@@ -42,7 +42,7 @@ const (
 var buttons = []button{
 	{Slot: "detail-actions", Label: "rotate 90", Mode: "relay", Path: "/relay/rotate", Media: "image"},
 	{Slot: "batch-bar", Label: "rotate 90", Mode: "relay", Path: "/relay/rotate", Media: "image"},
-	{Slot: "detail-actions", Label: "crop", Mode: "open", Path: "/crop?image={image_id}&back={back_url}", Media: "image"},
+	{Slot: "detail-actions", Label: "crop", Mode: "open", Path: "/crop?image={image_id}&gallery={gallery}&back={back_url}", Media: "image"},
 }
 
 func main() {
@@ -63,10 +63,12 @@ func main() {
 const rotateBudget = 8 * time.Second
 
 // rotateRelay answers a click. The payload carries the scope the surface had:
-// the one image on a detail page, the selection under the gallery.
+// the one image on a detail page, the selection under the gallery, and the
+// gallery they are in.
 func rotateRelay(w http.ResponseWriter, r *http.Request) {
 	var click struct {
-		ImageIDs []int `json:"image_ids"`
+		ImageIDs []int  `json:"image_ids"`
+		Gallery  string `json:"gallery"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&click); err != nil {
 		sendJSON(w, http.StatusOK, map[string]any{"ok": false, "message": "could not read the request"})
@@ -81,7 +83,7 @@ func rotateRelay(w http.ResponseWriter, r *http.Request) {
 			left = len(click.ImageIDs) - i
 			break
 		}
-		if err := rotate(id); err != nil {
+		if err := rotate(id, click.Gallery); err != nil {
 			log.Printf("rotate %d: %v", id, err) // one bad image must not take the batch with it
 			failed, why = failed+1, err
 			continue
@@ -103,8 +105,8 @@ func rotateRelay(w http.ResponseWriter, r *http.Request) {
 // rotate is the whole contract in three calls: read the bytes, change them,
 // write them back. monbooru re-derives the hash, dimensions, thumbnail and
 // phash, and keeps the tags, sources and relations.
-func rotate(imageID int) error {
-	src, format, err := fetchImage(imageID)
+func rotate(imageID int, gallery string) error {
+	src, format, err := fetchImage(imageID, gallery)
 	if err != nil {
 		return err
 	}
@@ -115,7 +117,7 @@ func rotate(imageID int) error {
 			turned.Set(b.Max.Y-1-y, x-b.Min.X, src.At(x, y))
 		}
 	}
-	return replaceImage(imageID, turned, format)
+	return replaceImage(imageID, gallery, turned, format)
 }
 
 // ---- crop: an open-mode button -----------------------------------------
@@ -136,8 +138,9 @@ func cropPage(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_ = cropTemplate.Execute(w, map[string]any{
-		"ID":   imageID,
-		"Back": backURL(r, r.URL.Query().Get("back")),
+		"ID":      imageID,
+		"Gallery": r.URL.Query().Get("gallery"),
+		"Back":    backURL(r, r.URL.Query().Get("back")),
 	})
 }
 
@@ -149,7 +152,7 @@ func cropPreview(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad image id", http.StatusBadRequest)
 		return
 	}
-	raw, err := imageBytes(imageID)
+	raw, err := imageBytes(imageID, r.URL.Query().Get("gallery"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadGateway)
 		return
@@ -169,7 +172,8 @@ func cropSave(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad image id", http.StatusBadRequest)
 		return
 	}
-	src, format, err := fetchImage(imageID)
+	gallery := r.FormValue("gallery")
+	src, format, err := fetchImage(imageID, gallery)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadGateway)
 		return
@@ -186,9 +190,9 @@ func cropSave(w http.ResponseWriter, r *http.Request) {
 	draw.Draw(cropped, cropped.Bounds(), src, box.Min, draw.Src)
 
 	if r.FormValue("mode") == "version" {
-		err = saveAsVersion(imageID, cropped, format)
+		err = saveAsVersion(imageID, gallery, cropped, format)
 	} else {
-		err = replaceImage(imageID, cropped, format)
+		err = replaceImage(imageID, gallery, cropped, format)
 	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadGateway)
@@ -210,15 +214,24 @@ func backURL(r *http.Request, raw string) string {
 
 // ---- what the edits do to the library ----------------------------------
 
-func imageBytes(imageID int) ([]byte, error) {
-	raw, _, err := call("GET", api("/images/%d/still", imageID), "", nil)
+// inGallery pins a call to the gallery the click came from; without it
+// monbooru answers from whichever gallery is active when the call lands.
+func inGallery(u, gallery string) string {
+	if gallery == "" {
+		return u
+	}
+	return u + "?gallery=" + url.QueryEscape(gallery)
+}
+
+func imageBytes(imageID int, gallery string) ([]byte, error) {
+	raw, _, err := call("GET", inGallery(api("/images/%d/still", imageID), gallery), "", nil)
 	return raw, err
 }
 
 // fetchImage decodes an image, reporting the format it arrived in so the edit
 // can go back the same way.
-func fetchImage(imageID int) (image.Image, string, error) {
-	raw, err := imageBytes(imageID)
+func fetchImage(imageID int, gallery string) (image.Image, string, error) {
+	raw, err := imageBytes(imageID, gallery)
 	if err != nil {
 		return nil, "", err
 	}
@@ -267,24 +280,24 @@ func upload(url, filename string, body []byte, fields map[string]string) ([]byte
 
 // replaceImage swaps an image's bytes in place. Sending only the file part
 // leaves the rest of the row - tags, sources, relations, collections - alone.
-func replaceImage(imageID int, img image.Image, format string) error {
+func replaceImage(imageID int, gallery string, img image.Image, format string) error {
 	body, ext, err := encode(img, format)
 	if err != nil {
 		return err
 	}
-	_, err = upload(api("/images/%d/file", imageID), "edited."+ext, body, nil)
+	_, err = upload(inGallery(api("/images/%d/file", imageID), gallery), "edited."+ext, body, nil)
 	return err
 }
 
 // saveAsVersion pushes the edit as its own image and declares it a newer
 // version of the one it came from, so both survive and the relation says which
 // came first. via names us as the new row's origin.
-func saveAsVersion(parentID int, img image.Image, format string) error {
+func saveAsVersion(parentID int, gallery string, img image.Image, format string) error {
 	body, ext, err := encode(img, format)
 	if err != nil {
 		return err
 	}
-	reply, err := upload(api("/images"), "cropped."+ext, body, map[string]string{"via": appName})
+	reply, err := upload(inGallery(api("/images"), gallery), "cropped."+ext, body, map[string]string{"via": appName})
 	if err != nil {
 		return err
 	}
@@ -305,7 +318,7 @@ func saveAsVersion(parentID int, img image.Image, format string) error {
 	}
 	// The image is saved either way, so a link that fails is a log line rather
 	// than a failed crop.
-	if err := postJSON(api("/relations"), map[string]any{"type": "version", "a": parentID, "b": newID}, nil); err != nil {
+	if err := postJSON(inGallery(api("/relations"), gallery), map[string]any{"type": "version", "a": parentID, "b": newID}, nil); err != nil {
 		log.Printf("link version %d -> %d: %v", parentID, newID, err)
 	}
 	return nil

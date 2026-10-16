@@ -9,12 +9,12 @@ folder into monbooru's models folder.
 
 | name              | what it tags                           | size   | login | maintainer | source                                                                          | monbooru |
 |-------------------|----------------------------------------|--------|-------|------------|---------------------------------------------------------------------------------|----------|
-| wd-swinv2         | anime, the WD v3 label set             | 330 MB | no    | leqwin     | [SmilingWolf](https://huggingface.co/SmilingWolf/wd-swinv2-tagger-v3)           | v1.22.1  |
-| animetimm-eva02   | anime, a newer danbooru tag set        | 1.3 GB | yes   | leqwin     | [animetimm](https://huggingface.co/animetimm/eva02_large_patch14_448.dbv4-full) | v1.22.1  |
-| joytag            | photos and realistic images            | 430 MB | no    | leqwin     | [fancyfeast](https://huggingface.co/fancyfeast/joytag)                          | v1.22.1  |
-| camie-v2          | anime, with artists and copyrights     | 789 MB | no    | leqwin     | [Camais03](https://huggingface.co/Camais03/camie-tagger-v2)                     | v1.22.1  |
-| pixai-v1          | anime, the newest tag set with artists | 2 GB   | no    | leqwin     | [noaione](https://huggingface.co/noaione/pixai-tagger-v1.0-onnx)                | v1.22.1  |
-| wd-eva02-large-v3 | anime, the WD v3 label set             | 1.3 GB | no    | leqwin     | [SmilingWolf](https://huggingface.co/SmilingWolf/wd-eva02-large-tagger-v3)      | v1.22.1  |
+| wd-swinv2         | anime, the WD v3 label set             | 330 MB | no    | leqwin     | [SmilingWolf](https://huggingface.co/SmilingWolf/wd-swinv2-tagger-v3)           | v1.22.1      |
+| animetimm-eva02   | anime, a newer danbooru tag set        | 1.3 GB | yes   | leqwin     | [animetimm](https://huggingface.co/animetimm/eva02_large_patch14_448.dbv4-full) | v1.22.1      |
+| joytag            | photos and realistic images            | 430 MB | no    | leqwin     | [fancyfeast](https://huggingface.co/fancyfeast/joytag)                          | v1.22.1     |
+| camie-v2          | anime, with artists and copyrights     | 789 MB | no    | leqwin     | [Camais03](https://huggingface.co/Camais03/camie-tagger-v2)                     | v1.22.1      |
+| pixai-v1          | anime, the newest tag set with artists | 2 GB   | no    | leqwin     | [noaione](https://huggingface.co/noaione/pixai-tagger-v1.0-onnx)                | v1.22.1      |
+| wd-eva02-large-v3 | anime, the WD v3 label set             | 1.3 GB | no    | leqwin     | [SmilingWolf](https://huggingface.co/SmilingWolf/wd-eva02-large-tagger-v3)      | v1.22.1      |
 
 `login` says whether the model page needs a Hugging Face login first.
 `monbooru` is the last version the maintainer tested against.

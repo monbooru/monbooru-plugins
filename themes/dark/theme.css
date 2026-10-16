@@ -1,7 +1,7 @@
 /* monbooru theme starter.
    Copy this folder, rename it, drop it in <configdir>/themes/, and select it
    in Settings > Plugins. A logo.png beside this file swaps the topbar
-   logo while the theme is active.
+   logo while the theme is active, and a favicon.png the tab icon.
 
    The variable names are the stable theming surface; rule-level
    selectors are not. A theme that overrides more than these may break

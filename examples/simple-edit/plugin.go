@@ -88,7 +88,12 @@ func run(mux *http.ServeMux) {
 
 	// Pairing waits on the user, so it runs beside the server rather than before it.
 	go func() {
-		if err := pair(); err != nil {
+		err := pair()
+		if errors.Is(err, errDenied) {
+			log.Print("pairing denied; Disable the plugin in Settings > Plugins, or restart it to offer again")
+			return
+		}
+		if err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -154,6 +159,8 @@ func pair() error {
 	}
 }
 
+var errDenied = errors.New("the user denied the pairing")
+
 // offer makes one pairing offer and polls until monbooru answers it. An empty
 // token and no error means the offer aged out before anyone approved it.
 func offer(peer string) (string, error) {
@@ -193,7 +200,7 @@ func offer(peer string) (string, error) {
 		case answer.Token != "":
 			return answer.Token, nil
 		case answer.Status == "denied":
-			return "", errors.New("the user denied the pairing")
+			return "", errDenied
 		}
 		time.Sleep(2 * time.Second)
 	}

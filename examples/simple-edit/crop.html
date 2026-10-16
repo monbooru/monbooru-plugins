@@ -30,9 +30,10 @@
 
 <h1>crop image {{.ID}}</h1>
 <p>Drag a box over the image, adjust it by its handles, then keep the result.</p>
-<div id="frame"><img id="pic" src="crop/preview?image={{.ID}}" alt=""><div id="box"></div></div>
+<div id="frame"><img id="pic" src="crop/preview?image={{.ID}}&gallery={{.Gallery}}" alt=""><div id="box"></div></div>
 <form method="post" action="crop">
   <input type="hidden" name="image" value="{{.ID}}">
+  <input type="hidden" name="gallery" value="{{.Gallery}}">
   <input type="hidden" name="back" value="{{.Back}}">
   <input type="hidden" name="x" id="x"><input type="hidden" name="y" id="y">
   <input type="hidden" name="w" id="w"><input type="hidden" name="h" id="h">
