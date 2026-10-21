@@ -3,8 +3,9 @@
 see [CONTRIBUTING](CONTRIBUTING.md).
 
 A theme is a folder holding `theme.css` and optionally `logo.png` and
-`favicon.png`, dropped in `<configdir>/themes/` and picked in
-Settings > Plugins.
+`favicon.png`, dropped in `<configdir>/themes/` and picked in monbooru's
+Settings > Plugins or monloader's Settings. The same folder works in both
+apps.
 
 | name    | the look                                              | logo | favicon | maintainer | source                           | monbooru |
 |---------|-------------------------------------------------------|------|---------|------------|----------------------------------|----------|

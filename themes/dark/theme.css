@@ -1,11 +1,12 @@
-/* monbooru theme starter.
+/* monbooru and monloader theme starter.
    Copy this folder, rename it, drop it in <configdir>/themes/, and select it
-   in Settings > Plugins. A logo.png beside this file swaps the topbar
-   logo while the theme is active, and a favicon.png the tab icon.
+   in monbooru's Settings > Plugins or monloader's Settings. A logo.png
+   beside this file swaps the topbar logo while the theme is active, and a
+   favicon.png the tab icon.
 
    The variable names are the stable theming surface; rule-level
    selectors are not. A theme that overrides more than these may break
-  across releases. */
+   across releases.
 
 :root {
   color-scheme: dark;
@@ -21,8 +22,11 @@
   --fg-dim:     #a09898;  /* secondary text, labels, counts */
 
   /* the app's own colors */
-  --accent:     #9d2235;  /* focus rings, active states, danger surfaces */
-  --link:       #ef8f99;  /* links and linklike buttons */
+  --accent:     #9d2235;  /* focus rings, active states and fills, never text */
+  --link:       #ef8f99;  /* links, linklike buttons and every text accent */
+  --danger:     var(--accent);  /* destructive button fill */
+  --on-danger:  var(--fg);      /* destructive button text */
+  --peer:       var(--monloader);  /* the other app's colour */
 
   /* semantic */
   --success:    #7fc99a;  /* ok flashes, confirm buttons */
@@ -30,7 +34,7 @@
   --error:      #ef8f99;  /* error flashes, danger text */
 
   /* provenance - who did this */
-  --monloader:  #88b0d8;  /* monloader surfaces */
+  --monloader:  #9fa8da;  /* monloader surfaces */
   --tagger:     #7cc4b8;  /* auto-tagger surfaces and auto tags */
   --plugin:     #aa66cc;  /* plugin buttons and blocks */
 
@@ -71,3 +75,17 @@
   --cat-ed5d1f: #...;   species
   */
 }
+
+/* monloader's own tokens, with its shipped values.
+:root[data-app="monloader"] {
+  --accent:     #5c6bc0;
+  --link:       #9fa8da;
+  --monbooru:   #ef8f99;
+  --danger:     #9d2235;
+  --heat-0:     #1b1b25;
+  --heat-1:     #4a5595;
+  --heat-2:     var(--accent);
+  --heat-3:     #7583d8;
+  --heat-4:     #93a0ef;
+}
+*/
