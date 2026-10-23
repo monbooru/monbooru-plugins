@@ -9,8 +9,8 @@ apps.
 
 | name    | the look                                              | logo | favicon | maintainer | source                           | monbooru |
 |---------|-------------------------------------------------------|------|---------|------------|----------------------------------|----------|
-| light   | a simple light theme | yes   | yes     | leqwin     | [themes/light](themes/light)     | v1.22.1  |
-| dark | the default shipped dark theme, every variable commented     | no   | no      | leqwin     | [themes/dark](themes/dark) | v1.20.1  |
+| light   | a simple light theme | yes   | yes     | leqwin     | [themes/light](themes/light)     | v1.22.2  |
+| dark | the default shipped dark theme, every variable commented     | no   | no      | leqwin     | [themes/dark](themes/dark) | v1.22.2  |
 | lainbooru | serial experiments lain theme, indigo grounds with magenta accent | yes  | no      | gary-host-laptop | [lainbooru-theme](https://github.com/gary-host-laptop/ghost-themes/tree/main/lainbooru) | v1.20.1  |
 | old_steam | olive palette inspired by the old steam client | yes  | no      | gary-host-laptop | [old_steam](https://github.com/gary-host-laptop/ghost-themes/tree/main/old_steam) | v1.20.1  |
 

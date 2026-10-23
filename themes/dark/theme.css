@@ -6,7 +6,7 @@
 
    The variable names are the stable theming surface; rule-level
    selectors are not. A theme that overrides more than these may break
-   across releases.
+   across releases. */
 
 :root {
   color-scheme: dark;
