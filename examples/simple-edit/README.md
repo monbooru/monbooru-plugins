@@ -47,7 +47,7 @@ required in the folder.
 ## Running it
 
 Put this folder in `<configdir>/plugins/` (next to `monbooru.toml`) with the
-binary built, start it from its row under Settings > Plugins, and approve
+binary built, press Enable on its row under Settings -> Plugins, and approve
 the pairing request that follows.
 
 You can also run it by hand, without putting it in `plugins/`:
@@ -60,8 +60,7 @@ You can also run it by hand, without putting it in `plugins/`:
 
 The buttons a plugin declares are what the operator approved, so changing
 `buttons` in `main.go` means pairing again: rebuild, remove the pairing under
-Settings > Plugins, which stops the plugin, then Enable it and approve the
-card it offers.
+Settings -> Plugins, which stops the plugin, then Enable it and approve it under Pairing requests.
 
 ## What to copy
 

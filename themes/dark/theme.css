@@ -1,8 +1,9 @@
 /* monbooru and monloader theme starter.
    Copy this folder, rename it, drop it in <configdir>/themes/, and select it
    in monbooru's Settings > Plugins or monloader's Settings. A logo.png
-   beside this file swaps the topbar logo while the theme is active, and a
-   favicon.png the tab icon.
+   beside this file swaps the topbar logo while the theme is active, a
+   favicon.png the tab icon, and mascot-<face>.png files the drawings on
+   empty pages; a theme without them shows no drawing.
 
    The variable names are the stable theming surface; rule-level
    selectors are not. A theme that overrides more than these may break
@@ -22,10 +23,11 @@
   --fg-dim:     #a09898;  /* secondary text, labels, counts */
 
   /* the app's own colors */
-  --accent:     #9d2235;  /* focus rings, active states and fills, never text */
-  --link:       #ef8f99;  /* links, linklike buttons and every text accent */
+  --accent:     #9d2235;  /* active states and fills, never text */
+  --link:       #ef8f99;  /* links, linklike buttons, keyboard focus and every text accent */
   --danger:     var(--accent);  /* destructive button fill */
   --on-danger:  var(--fg);      /* destructive button text */
+  --on-accent:  var(--fg);      /* text on an accent fill: pressed toggles */
   --peer:       var(--monloader);  /* the other app's colour */
 
   /* semantic */
@@ -44,12 +46,20 @@
   --alternate:  #9b93e0;  /* alternate-relation surfaces */
 
   /* overlays and media */
-  --scrim:      #000;     /* dialog backdrops, thumbnail chip scrims -
+  --scrim:      #000;     /* thumbnail chip scrims -
                              each site applies its own alpha over this */
+  --backdrop:   color-mix(in srgb, var(--scrim) 70%, transparent);  /* behind an open dialog */
+  --shadow-block: color-mix(in srgb, var(--accent) 55%, #000);  /* the hard, unblurred shadow under a dialog or a status line */
   --media-bg:   #000;     /* the well behind images and the reader */
 
   /* type */
   --font-mono:  "JetBrains Mono", "Fira Mono", "Courier New", monospace;
+
+  /* the topbar name, "mon" then the rest in the accent */
+  --wordmark-font:     18px "Dela Gothic One", var(--font-mono);  /* a font shorthand */
+  --wordmark-case:     lowercase;
+  --wordmark-tracking: 0;
+  --wordmark-accent:   var(--link);
 
   /* header menu (optional), one hue per entry.
   Leave unset for a monochrome menu.

@@ -90,7 +90,11 @@ func run(mux *http.ServeMux) {
 	go func() {
 		err := pair()
 		if errors.Is(err, errDenied) {
-			log.Print("pairing denied; Disable the plugin in Settings > Plugins, or restart it to offer again")
+			log.Print("pairing denied; Disable the plugin in Settings -> Plugins, or restart it to offer again")
+			return
+		}
+		if errors.Is(err, errRefused) {
+			log.Printf("%v; update the plugin or monbooru, then restart it", err)
 			return
 		}
 		if err != nil {
@@ -161,6 +165,8 @@ func pair() error {
 
 var errDenied = errors.New("the user denied the pairing")
 
+var errRefused = errors.New("monbooru refused the pairing offer")
+
 // offer makes one pairing offer and polls until monbooru answers it. An empty
 // token and no error means the offer aged out before anyone approved it.
 func offer(peer string) (string, error) {
@@ -168,7 +174,7 @@ func offer(peer string) (string, error) {
 		RequestID string `json:"request_id"`
 	}
 
-	if err := postJSON(api("/pair/request"), map[string]any{
+	body, err := json.Marshal(map[string]any{
 		"app":              appName,
 		"url":              selfURL,
 		"requested_scopes": []string{"read", "write"},
@@ -176,10 +182,23 @@ func offer(peer string) (string, error) {
 		"version":          version,
 		"buttons":          buttons,
 		"contract":         contract,
-	}, &offered); err != nil {
+	})
+	if err != nil {
 		return "", err
 	}
-	log.Print("waiting for approval in monbooru: Settings > Plugins")
+	// A 409 (an unsupported contract, say) is final: offering again would
+	// get the same answer.
+	reply, code, err := call("POST", api("/pair/request"), "application/json", bytes.NewReader(body))
+	if code == http.StatusConflict {
+		return "", fmt.Errorf("%w: %v", errRefused, err)
+	}
+	if err != nil {
+		return "", err
+	}
+	if err := json.Unmarshal(reply, &offered); err != nil {
+		return "", err
+	}
+	log.Print("waiting for approval in monbooru: Settings -> Plugins")
 
 	for {
 		reply, code, err := call("GET", api("/pair/status?id=%s", offered.RequestID), "", nil)

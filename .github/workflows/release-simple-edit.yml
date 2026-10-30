@@ -68,8 +68,8 @@ jobs:
           changes.
 
           Unpack the archive for your machine and drop the `simple-edit` folder in
-          `<configdir>/plugins/`, next to `monbooru.toml`. Start it from its row
-          under Settings > Plugins and approve the pairing card.
+          `<configdir>/plugins/`, next to `monbooru.toml`. Press Enable on its row
+          under Settings -> Plugins and approve it under Pairing requests.
           EOF
           )"
 
