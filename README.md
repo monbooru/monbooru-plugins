@@ -20,7 +20,7 @@ Being listed here is not a code review. Nothing has been verified: read the sour
 
 - **Plugin**: drop its folder (the one with a `plugin.toml`) in `<configdir>/plugins/` and press **Enable** on its row in **Settings -> Plugins**, or run it yourself on your network, pointed at monbooru. Either way, press **Approve** under **Pairing requests** in **Settings -> Plugins**. monbooru provides no runtime, so a plugin that isn't a self-contained binary should include in its README what it needs.
 - **Theme**: drop its folder in `<configdir>/themes/` (a bare `.css` file works for CSS-only themes) and pick it in **Settings -> Plugins**, or in monloader's **Settings**.
-- **Tagger**: copy its folder from [`taggers/`](taggers) into monbooru's models folder, then press **Install** on its row in **Settings -> Auto-Tagger** to fetch the weights.
+- **Tagger**: copy its folder from [`taggers/`](taggers) into monbooru's models folder, then press **Install** on its row in **Settings -> Tagger** and run the command it shows to fetch the weights (the desktop app gives download links instead).
 
 ## In this repo
 
