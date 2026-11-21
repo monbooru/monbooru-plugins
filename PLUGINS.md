@@ -10,6 +10,7 @@ see [CONTRIBUTING](CONTRIBUTING.md).
 |-------------|--------------------------------------------|------------|----------------------------------------------|----------|----------|
 | simple-edit | rotate and crop images (Go, single binary) | leqwin     | [examples/simple-edit](examples/simple-edit) | 1        | v1.22.1  |
 | image-converter | convert images in place to WebP/JPEG/PNG; (Python 3.9+) | GideonLovecraft | [image-converter](https://github.com/GideonLovecraft/monbooru-image-converter) | 1 | v1.24.1 |
+| tag-cloud | tag cloud page with category mix, top N and palette; needs Python 3.9+ (stdlib only) | GideonLovecraft | [tag-cloud](https://github.com/GideonLovecraft/monbooru-tag-cloud) | 1 | v1.24.1 |
 
 `source` is a public repo. `contract` is the monbooru plugin contract version the plugin sends in its pairing request; a monbooru that uses an older one refuses it, so a row older than the running monbooru is not by itself a warning. `monbooru` is the last monbooru version the maintainer tested against (for information only).
 
