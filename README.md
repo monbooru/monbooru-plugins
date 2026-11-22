@@ -9,6 +9,7 @@ Registry of plugins, themes and auto-tagger models for [monbooru](https://github
 - **[PLUGINS.md](PLUGINS.md)**: plugins
 - **[THEMES.md](THEMES.md)**: themes
 - **[TAGGERS.md](TAGGERS.md)**: auto-tagger models
+- **[THIRD_PARTY_CLIENTS.md](THIRD_PARTY_CLIENTS.md)**: third-party clients
 
 ## Before you install a plugin or a theme
 
